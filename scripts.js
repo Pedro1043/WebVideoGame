@@ -1,12 +1,14 @@
 window.onload = function() {
     var canvas = document.getElementById("canvas");
     var context = canvas.getContext("2d");
-    var x = 0;
-    var y = 100;
-
+    var x = 250;
+    var y = 150;
+    var coinx = Math.random() * (600-50);
+    var coiny = Math.random() * (400-50);
     var t = Date.now();
     let speed = 100;
     let dir = 0;
+    let score = 0;
 
     //botones
     let up = document.getElementById("up");
@@ -41,6 +43,8 @@ window.onload = function() {
     right.ontouchstart = function() {dir = 1;}
     right.ontouchend = function() {dir = 0;}
 
+
+
     function draw() {
         var timePassed = (Date.now() - t) / 1000 ;
         t = Date.now();
@@ -48,13 +52,24 @@ window.onload = function() {
 
         context.clearRect(0, 0, 600, 400);
 
-        context.font = '25px Arial';
+        context.font = '10px Arial';
         context.fillStyle = 'black';
-        context.fillText("FPS: " + fps, 23, 30); //Contador de fps
+        context.fillText("FPS: " + fps, 2, 9); //Contador de fps
 
+        context.font = "25px Arial";
+        context.fillStyle = 'black';
+        context.fillText("Score: " + score, 2, 33.5) //Puntaje
+
+        //Rectangulo rojo
         context.beginPath();
-        context.rect(x, y, 100, 100);
+        context.rect(x, y, 100, 100);  
         context.fillStyle="red";
+        context.fill();
+
+        //Monedas 
+        context.beginPath();
+        context.rect(coinx,coiny, 50, 50);
+        context.fillStyle="#e3c228";
         context.fill();
 
         if(dir == 1){                      //Derecha
@@ -75,7 +90,13 @@ window.onload = function() {
             }
         }
 
-        console.log(dir);
+        //Colición de las monedas
+        if (coinx <= x+100 && x <= coinx+50 && coiny <= y+100 && y <= coiny+50){
+            score++;
+            coinx = Math.random() * (600-50);
+            coiny = Math.random() * (400-50);
+        }
+
         window.requestAnimationFrame(draw);
     }
     draw();
